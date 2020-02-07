@@ -1,8 +1,8 @@
 version: "3"
 services:
     api:
-        build: "/"
-        ports: 
+        build: "./"
+        ports:
             - 5000:5000
-        volumes: 
+        volumes:
             - ./index
