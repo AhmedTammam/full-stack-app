@@ -1,7 +1,9 @@
 const express = require('express');
 const uuid = require('uuid')
 const router = express.Router();
-const users = require('../../Users')
+const users = require('../../Users');
+const async = require('async');
+const sendEmail = require('./send-email');
 
 
 // Get all users
@@ -41,7 +43,30 @@ router.post('/', (req,res) => {
         }
 
         users.push(newUser);
-        res.send(newUser)
+
+        async.parallel([
+            function (callback) {
+              sendEmail(
+                callback,
+                'info@tammam.com',
+                [newUser.email],
+                'Mesa 3alek',
+                'A7la mesa 3alek',
+                '<p style="font-size: 32px;">A7la mesa 3alek</p>'
+              );
+            }
+          ], function(err, results) {
+            res.send({
+              success: true,
+              message: 'Emails sent',
+              successfulEmails: results[0].successfulEmails,
+              errorEmails: results[0].errorEmails,
+            });
+          });
+
+        res.send(newUser);
+
+
     } else {
         res.status(400).json({msg: "please enter valid email"})
     }
