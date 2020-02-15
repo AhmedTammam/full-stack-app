@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+require('dotenv/config');
 
 
 const app = express();
@@ -14,6 +16,8 @@ app.get('/', (req, res) => {
 
 // users api router
 app.use('/api/users', require('./routes/api/users'));
+
+mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, ()=> console.log('DB connected'));
 
 
 const PORT = process.env.PORT || 5000;
